@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sehenswürdigkeiten</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <style>
+        .leaflet-tile {
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <button id="menu-button">☰</button>
+            <h1>Sehenswürdigkeiten</h1>
+            <!--<button id="search-button">🔍</button>-->
+        </nav>
+    </header>
+
+    <div id="language-menu" class="hidden">
+        <button data-lang="de">Deutsch</button>
+        <button data-lang="en">English</button>
+        <button data-lang="fr">Français</button>
+    </div>
+
+    <div id="locations-container" role="main">
+        <!-- Locations will be dynamically added here -->
+    </div>
+
+    <div id="location-details" class="hidden">
+        <!-- Location details will be dynamically added here -->
+    </div>
+
+    <footer>
+        <!--<button id="attractions-button" class="active">
+            <i class="fas fa-landmark"></i>
+            Attraktionen
+        </button>
+        <button id="map-button">
+            <i class="fas fa-map-marked-alt"></i>
+            Karte
+        </button>-->
+        <p id="copyright" class="copyright">
+            Copyright &copy; 2024 Linus Frederix
+        </p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
