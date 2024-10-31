@@ -161,10 +161,21 @@ const locations = [
 
 // Beispieldaten für Sehenswürdigkeiten bleiben gleich...
 
+// Add to your document.addEventListener('DOMContentLoaded', ...)
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load saved progress
+    loadProgress();
+    
+    // Rest of your existing initialization code...
+});
+
 let currentLanguage = 'de';
 let showingSplashScreen = true;
 
-
+locations.forEach((location, index) => {
+    location.unlocked = index === 0; // Only first location is unlocked initially
+    location.completed = false; // Track if user has visited the location
+});
 
 
 
@@ -198,6 +209,31 @@ async function loadVisitedStatus() {
         loadLocations();
     } catch (error) {
         console.error('Error loading visited status:', error);
+    }
+}
+
+// Function to save progress to localStorage
+function saveProgress() {
+    const progress = locations.map(loc => ({
+        id: loc.id,
+        unlocked: loc.unlocked,
+        completed: loc.completed
+    }));
+    localStorage.setItem('locationProgress', JSON.stringify(progress));
+}
+
+// Function to load progress from localStorage
+function loadProgress() {
+    const savedProgress = localStorage.getItem('locationProgress');
+    if (savedProgress) {
+        const progress = JSON.parse(savedProgress);
+        progress.forEach(saved => {
+            const location = locations.find(loc => loc.id === saved.id);
+            if (location) {
+                location.unlocked = saved.unlocked;
+                location.completed = saved.completed;
+            }
+        });
     }
 }
 
@@ -284,12 +320,16 @@ function loadLocations() {
     });
 }
 // Unten: Alle Sehenswürdigkeiten auf einer Seite
+// Update createLocationCard function
 function createLocationCard(location) {
     const card = document.createElement('div');
-    card.className = 'location-card';
+    card.className = `location-card ${!location.unlocked ? 'locked' : ''}`;
     card.dataset.id = location.id;
     
+    const lockOverlay = !location.unlocked ? '<div class="lock-overlay">🔒</div>' : '';
+    
     card.innerHTML = `
+        ${lockOverlay}
         <img src="${location.images[0]}" alt="${location.name[currentLanguage]}">
         <div class="content">
             <h2>${location.name[currentLanguage]}</h2>
@@ -302,6 +342,10 @@ function createLocationCard(location) {
     `;
 
     card.addEventListener('click', (e) => {
+        if (!location.unlocked) {
+            alert('Complete the previous location to unlock this one!');
+            return;
+        }
         if (!e.target.classList.contains('checkmark-icon')) {
             showLocationDetails(location);
         }
@@ -413,7 +457,9 @@ function setupLanguageButtons() {
             e.stopPropagation(); // Prevent the document click handler from interfering
             currentLanguage = e.target.dataset.lang;
             loadLocations();
-            toggleLanguageMenu(e);
+            // Directly hide the menu instead of toggling
+            const menu = document.getElementById('language-menu');
+            menu.classList.add('hidden');
         });
     });
 }
@@ -433,8 +479,13 @@ function showLocationDetails(location) {
             <button class="carousel-button next">❯</button>
         </div>
         <p>${location.longDescription[currentLanguage]}</p>
-        <strong>${location.openinghours[currentLanguage]}</strong>${location.openingDesc[currentLanguage]}
+        <p style="margin: 0; padding: 0;"><strong>${location.openinghours[currentLanguage]}</p></strong><p>${location.openingDesc[currentLanguage]}</p>
         <div id="map" style="height: 300px;"></div>
+
+        <div class="action-buttons">
+            <button id="find-way-btn" class="action-button">Find the way</button>
+            ${!location.completed ? `<button id="arrived-btn" class="action-button">I have arrived</button>` : ''}
+        </div>
 
         <!-- FAQ Section -->
         <div class="faq-section">
@@ -465,16 +516,56 @@ function showLocationDetails(location) {
     setupCarousel();
     setupFAQHandlers();
 
-    // Initialize Leaflet map
+    // Initialize map
     const map = L.map('map').setView(location.geo, 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+    L.marker(location.geo).addTo(map).bindPopup(location.name[currentLanguage]).openPopup();
 
-    // Add marker for the location
-    L.marker(location.geo).addTo(map)
-        .bindPopup(location.name[currentLanguage])
-        .openPopup();
+    // Setup event listeners
+    document.getElementById('back-button').addEventListener('click', hideLocationDetails);
+    document.getElementById('find-way-btn').addEventListener('click', () => {
+        // Open Google Maps with directions
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                const destinationLat = location.geo[0];
+                const destinationLng = location.geo[1];
+                const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${destinationLat},${destinationLng}`;
+                window.open(mapsUrl, '_blank');
+            });
+        } else {
+            alert('Geolocation is not supported by your browser');
+        }
+    });
+
+    const arrivedBtn = document.getElementById('arrived-btn');
+    if (arrivedBtn) {
+        arrivedBtn.addEventListener('click', () => {
+            // Mark current location as completed
+            location.completed = true;
+            
+            // Find and unlock next location
+            const currentIndex = locations.findIndex(loc => loc.id === location.id);
+            if (currentIndex < locations.length - 1) {
+                locations[currentIndex + 1].unlocked = true;
+            }
+            
+            // Save progress
+            saveProgress();
+            
+            // Refresh the view
+            hideLocationDetails();
+            loadLocations();
+            
+            alert('Location completed! Next location unlocked!');
+        });
+    }
+
+    setupCarousel();
+    setupFAQHandlers();
 }
 
 // ... (rest of the code remains unchanged)
@@ -513,3 +604,4 @@ function loadLocations() {
         locationsContainer.appendChild(card);
     });
 }
+
