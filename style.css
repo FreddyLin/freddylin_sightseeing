@@ -406,3 +406,57 @@ footer button i {
 .hidden {
     display: none;
 }
+
+/* Add these styles to your existing CSS */
+
+.location-card.locked {
+    position: relative;
+    filter: grayscale(100%);
+    pointer-events: auto; /* Allow clicks to show the alert */
+}
+
+.lock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: white;
+    z-index: 1;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.action-button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007AFF;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+}
+
+#arrived-btn {
+    background-color: #28a745;
+}
+
+#arrived-btn:hover {
+    background-color: #218838;
+}
