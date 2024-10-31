@@ -166,6 +166,8 @@ let showingSplashScreen = true;
 
 
 
+
+
 // Splash Screen HTML Template
 const splashScreenHTML = `
     <div class="splash-content">
@@ -252,7 +254,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.addEventListener('DOMContentLoaded', () => {
     loadLocations();
     setupEventListeners();
+
+    document.addEventListener('click', (event) => {
+        const languageMenu = document.getElementById('language-menu');
+        const menuButton = document.getElementById('menu-button');
+        
+        // Close the menu if click is outside the menu and menu button
+        if (!languageMenu.contains(event.target) && !menuButton.contains(event.target)) {
+            languageMenu.classList.add('hidden');
+        }
+    });
 });
+
+// Modify the toggleLanguageMenu function to stop event propagation
+function toggleLanguageMenu(event) {
+    event.stopPropagation(); // Prevent the document click handler from immediately closing the menu
+    const menu = document.getElementById('language-menu');
+    menu.classList.toggle('hidden');
+}
+
 
 function loadLocations() {
     const locationsContainer = document.getElementById('locations-container');
@@ -385,13 +405,15 @@ function toggleLanguageMenu() {
     menu.classList.toggle('hidden');
 }
 
+// Update the language button setup to stop propagation as well
 function setupLanguageButtons() {
     const languageButtons = document.querySelectorAll('#language-menu button');
     languageButtons.forEach(button => {
         button.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent the document click handler from interfering
             currentLanguage = e.target.dataset.lang;
             loadLocations();
-            toggleLanguageMenu();
+            toggleLanguageMenu(e);
         });
     });
 }
