@@ -27,7 +27,6 @@ const locations = [
             'images/muenster2.jpg',
             'images/muenster3.jpg'
         ],
-        weather: 'sunny',
         visited: false,
         besucht: {
             de: "Visited:",
@@ -124,7 +123,6 @@ const locations = [
             'images/rathaus2.jpg',
             'images/rathaus3.webp'
         ],
-        weather: 'sunny',
         visited: false,
         besucht: {
             de: "Visited:",
@@ -161,12 +159,73 @@ const locations = [
 
 // Beispieldaten für Sehenswürdigkeiten bleiben gleich...
 
+
+
 // Add to your document.addEventListener('DOMContentLoaded', ...)
 document.addEventListener('DOMContentLoaded', async () => {
     // Load saved progress
-    loadProgress();
     
-    // Rest of your existing initialization code...
+
+    const isFirstVisit = localStorage.getItem('firstVisit') !== 'false';
+    const savedLanguage = localStorage.getItem('selectedLanguage');
+    // let currentLanguage = savedLanguage || 'de';
+
+    loadProgress();
+
+    const splashScreen = document.createElement('div');
+    splashScreen.id = 'splash-screen';
+    splashScreen.innerHTML = splashScreenHTML;
+    document.body.appendChild(splashScreen);
+
+    
+    // Setup Event Listeners
+    setupEventListeners();
+    
+    // Nach 3 Sekunden Splash Screen ausblenden
+    setTimeout(() => {
+        splashScreen.style.opacity = '0';
+        setTimeout(() => {
+            splashScreen.remove();
+            showingSplashScreen = false;
+        }, 300);
+    }, 1500);
+
+
+
+    if (isFirstVisit) {
+        // Show language selection overlay
+        document.getElementById('language-selection-screen').classList.remove('hidden');
+        
+        const languageButtons = document.querySelectorAll('.language-buttons button');
+        languageButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                // Get the text content and normalize it
+                const selectedLang = normalizeLanguage(e.target.textContent);
+                currentLanguage = selectedLang;
+                
+                console.log('Language selected:', selectedLang);
+            
+                // Mark as not first visit anymore
+                localStorage.setItem('firstVisit', 'false');
+                localStorage.setItem('selectedLanguage', selectedLang);
+            
+                // Hide language selection overlay
+                document.getElementById('language-selection-screen').classList.add('hidden');
+            
+                // Show welcome screen with selected language
+                showWelcomeScreen(selectedLang);
+            });
+        });
+    } else {
+        // Use saved language
+        currentLanguage = normalizeLanguage(savedLanguage) || 'de';
+        loadLocations();
+
+        // Hide overlay screens
+        const overlayScreens = document.querySelectorAll('.overlay-screen');
+        overlayScreens.forEach(screen => screen.classList.add('hidden'));
+    }
+
 });
 
 let currentLanguage = 'de';
@@ -176,6 +235,90 @@ locations.forEach((location, index) => {
     location.unlocked = index === 0; // Only first location is unlocked initially
     location.completed = false; // Track if user has visited the location
 });
+
+// Add a function to handle language selection
+function handleLanguageSelection(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('languageSelected', 'true');
+    localStorage.setItem('selectedLanguage', lang);
+    
+    
+
+}
+
+const welcomeContent = {
+    de: {
+        title: 'Willkommen zur Basel Stadtführung',
+        description: 'Entdecken Sie die schönsten Sehenswürdigkeiten von Basel. Diese interaktive Tour führt Sie zu historischen Orten und bietet spannende Einblicke in die Stadt.',
+        buttonText: 'Tour starten'
+    },
+    en: {
+        title: 'Welcome to Basel City Tour',
+        description: 'Discover the most beautiful attractions of Basel. This interactive tour will guide you to historical locations and provide exciting insights into the city.',
+        buttonText: 'Start Tour'
+    },
+    fr: {
+        title: 'Bienvenue à la visite de Bâle',
+        description: 'Découvrez les plus belles attractions de Bâle. Cette visite interactive vous guidera vers des lieux historiques et vous offrira des perspectives passionnantes sur la ville.',
+        buttonText: 'Commencer la visite'
+    }
+};
+
+// Helper function to normalize language codes
+function normalizeLanguage(lang) {
+    // Convert to lowercase and handle full text to language code
+    const langMap = {
+        'deutsch': 'de',
+        'english': 'en',
+        'français': 'fr',
+        'francais': 'fr',
+        'de': 'de',
+        'en': 'en',
+        'fr': 'fr'
+    };
+    return langMap[lang.toLowerCase()] || 'de'; // Default to German if unknown
+}
+
+// Updated welcome screen function
+function showWelcomeScreen(lang) {
+    const welcomeScreen = document.getElementById('welcome-screen');
+    if (!welcomeScreen) {
+        console.error('Welcome screen element not found');
+        return;
+    }
+
+    // Normalize the language code
+    const normalizedLang = normalizeLanguage(lang);
+    console.log('Showing welcome screen with language:', normalizedLang);
+
+    // Get the content for the selected language
+    const content = welcomeContent[normalizedLang];
+
+    if (!content) {
+        console.error('No content found for language:', normalizedLang);
+        content = welcomeContent.de; // Fallback to German
+    }
+
+    // Set welcome screen content
+    welcomeScreen.innerHTML = `
+        <div class="welcome-content">
+            <h1>${content.title}</h1>
+            <p>${content.description}</p>
+            <button id="start-tour-btn">${content.buttonText}</button>
+        </div>
+    `;
+
+    // Show welcome screen
+    welcomeScreen.classList.remove('hidden');
+
+    const startButton = document.getElementById('start-tour-btn');
+    if (startButton) {
+        startButton.addEventListener('click', () => {
+            welcomeScreen.classList.add('hidden');
+            loadLocations();
+        });
+    }
+}
 
 
 
@@ -196,21 +339,7 @@ const splashScreenHTML = `
 // <text x="50" y="50" text-anchor="middle" dy=".3em" font-size="24" font-weight="bold">HELLo</text>
 
 // Funktion zum Laden des Besuchsstatus aus der Datenbank
-async function loadVisitedStatus() {
-    try {
-        const response = await fetch('/api/visited');
-        const visitedIds = await response.json();
-        
-        locations.forEach(location => {
-            location.visited = visitedIds.includes(location.id);
-        });
-        
-        // Aktualisiere die UI
-        loadLocations();
-    } catch (error) {
-        console.error('Error loading visited status:', error);
-    }
-}
+
 
 // Function to save progress to localStorage
 function saveProgress() {
@@ -257,31 +386,6 @@ async function toggleVisited(id) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    //if (!await checkAuth()) {
-      //  return; // Stoppe die Ausführung, wenn nicht authentifiziert
-    //}
-    // Zeige Splash Screen
-    const splashScreen = document.createElement('div');
-    splashScreen.id = 'splash-screen';
-    splashScreen.innerHTML = splashScreenHTML;
-    document.body.appendChild(splashScreen);
-
-    // Lade Daten aus der Datenbank
-    await loadVisitedStatus();
-    
-    // Setup Event Listeners
-    setupEventListeners();
-    
-    // Nach 3 Sekunden Splash Screen ausblenden
-    setTimeout(() => {
-        splashScreen.style.opacity = '0';
-        setTimeout(() => {
-            splashScreen.remove();
-            showingSplashScreen = false;
-        }, 300);
-    }, 1500);
-});
 
 // Rest des bestehenden Codes bleibt gleich...
 
@@ -302,9 +406,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Modify the toggleLanguageMenu function to stop event propagation
+// Update the toggleLanguageMenu function
 function toggleLanguageMenu(event) {
-    event.stopPropagation(); // Prevent the document click handler from immediately closing the menu
+    if (event) {
+        event.stopPropagation();
+    }
     const menu = document.getElementById('language-menu');
     menu.classList.toggle('hidden');
 }
@@ -319,6 +425,124 @@ function loadLocations() {
         locationsContainer.appendChild(card);
     });
 }
+
+
+// Modal
+
+const modalContent = {
+    de: {
+        message: 'Schließen Sie den vorherigen Ort ab, um diesen freizuschalten!',
+        button: 'Verstanden'
+    },
+    en: {
+        message: 'Complete the previous location to unlock this one!',
+        button: 'Got it'
+    },
+    fr: {
+        message: 'Terminez l\'emplacement précédent pour débloquer celui-ci!',
+        button: 'Compris'
+    }
+};
+
+// Function to show the modal
+function showLockedLocationModal() {
+    const modal = document.getElementById('locked-location-modal');
+    const message = document.getElementById('locked-message');
+    const closeBtn = document.getElementById('modal-close-btn');
+    
+    // Set content based on current language
+    message.textContent = modalContent[currentLanguage].message;
+    closeBtn.textContent = modalContent[currentLanguage].button;
+    
+    // Show modal
+    modal.classList.remove('hidden');
+    setTimeout(() => modal.classList.add('show'), 10);
+}
+
+// Function to hide the modal
+function hideLockedLocationModal() {
+    const modal = document.getElementById('locked-location-modal');
+    modal.classList.remove('show');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+// Setup modal event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('locked-location-modal');
+    const closeBtn = document.querySelector('.close-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    closeBtn.addEventListener('click', hideLockedLocationModal);
+    modalCloseBtn.addEventListener('click', hideLockedLocationModal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            hideLockedLocationModal();
+        }
+    });
+});
+
+// At the top of your main.js file, add these modal strings
+const completedModalContent = {
+    de: {
+        title: 'Ort abgeschlossen!',
+        message: 'Gut gemacht! Der nächste Ort wurde freigeschaltet.',
+        button: 'Weiter'
+    },
+    en: {
+        title: 'Location Completed!',
+        message: 'Well done! The next location has been unlocked.',
+        button: 'Continue'
+    },
+    fr: {
+        title: 'Lieu terminé !',
+        message: 'Bien joué ! Le prochain lieu a été débloqué.',
+        button: 'Continuer'
+    }
+};
+
+// In the arrivedBtn click handler, replace the alert with:
+function showCompletedLocationModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-modal">×</span>
+            </div>
+            <div class="modal-body">
+                <div class="unlock-icon">🎉</div>
+                <h2>${completedModalContent[currentLanguage].title}</h2>
+                <p>${completedModalContent[currentLanguage].message}</p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-close-btn">${completedModalContent[currentLanguage].button}</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    
+    // Show modal with animation
+    setTimeout(() => modal.classList.add('show'), 10);
+
+    // Setup event listeners
+    const closeBtn = modal.querySelector('.close-modal');
+    const modalCloseBtn = modal.querySelector('#modal-close-btn');
+
+    function closeModal() {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    modalCloseBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+}
+
 // Unten: Alle Sehenswürdigkeiten auf einer Seite
 // Update createLocationCard function
 function createLocationCard(location) {
@@ -343,7 +567,7 @@ function createLocationCard(location) {
 
     card.addEventListener('click', (e) => {
         if (!location.unlocked) {
-            alert('Complete the previous location to unlock this one!');
+            showLockedLocationModal();
             return;
         }
         if (!e.target.classList.contains('checkmark-icon')) {
@@ -360,14 +584,6 @@ function createLocationCard(location) {
     return card;
 }
 
-function getWeatherIcon(weather) {
-    const weatherIcons = {
-        'sunny': '☀️',
-        'cloudy': '☁️',
-        'rainy': '🌧️',
-    };
-    return weatherIcons[weather] || '❓';
-}
 
 function toggleVisited(id) {
     const location = locations.find(loc => loc.id === id);
@@ -555,12 +771,14 @@ function showLocationDetails(location) {
             
             // Save progress
             saveProgress();
+
+            // Show completion modal
+            showCompletedLocationModal();
             
             // Refresh the view
             hideLocationDetails();
             loadLocations();
             
-            alert('Location completed! Next location unlocked!');
         });
     }
 
@@ -604,4 +822,3 @@ function loadLocations() {
         locationsContainer.appendChild(card);
     });
 }
-
