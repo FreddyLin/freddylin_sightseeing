@@ -12,6 +12,10 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <!-- Add these before your main script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
     <style>
         .leaflet-tile {
             border: none !important;
@@ -26,6 +30,8 @@
     </style>
 </head>
 <body>
+
+   
     <header>
         <nav>
             <button id="menu-button">☰</button>
@@ -48,6 +54,8 @@
         <!-- Location details will be dynamically added here -->
     </div>
 
+    
+
     <footer>
         <!--<button id="attractions-button" class="active">
             <i class="fas fa-landmark"></i>
@@ -62,7 +70,58 @@
         </p>
     </footer>
 
+     <!-- Sprachauswahl-Overlay -->
+     <div id="language-selection-screen" class="overlay-screen">
+        <div class="language-selection-content">
+            <h1>Choose Your Language</h1>
+            <div class="language-buttons">
+                <button>Deutsch</button>
+                <button>English</button>
+                <button>Français</button>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal locked-->
+
+    <div id="locked-location-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="lock-icon">🔒</div>
+                <p id="locked-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-close-btn"></button>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal unlocked-->
+
+    <div id="unlocked-location-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="unlock-icon">🔓</div>
+                <p id="unlocked-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-close-btn"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Willkommens-Overlay (wird dynamisch mit JavaScript generiert) -->
+    <div id="welcome-screen" class="overlay-screen hidden">
+        <!-- Content wird dynamisch eingefügt -->
+    </div>
+
     <script src="main.js"></script>
-    <script src="auth.js"></script>
+    <!--<script src="auth.js"></script>-->
 </body>
 </html>
