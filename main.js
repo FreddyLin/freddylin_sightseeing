@@ -236,6 +236,7 @@ locations.forEach((location, index) => {
     location.completed = false; // Track if user has visited the location
 });
 
+
 // Add a function to handle language selection
 function handleLanguageSelection(lang) {
     currentLanguage = lang;
