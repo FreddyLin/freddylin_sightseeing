@@ -37,11 +37,6 @@ const locations = [
             de: "Öffnungszeiten:",
             en: "Opening hours:",
             fr: "Heures d'ouverture:"
-        },
-        audioGuide: {
-            de: "audio/Münster_English.mp3",
-            en: "audio/Münster_English.mp3",
-            fr: "audio/Münster_English.mp3"
         }
     },
     // Fügen Sie hier weitere Sehenswürdigkeiten hinzu
@@ -82,11 +77,6 @@ const locations = [
             de: "Öffnungszeiten:",
             en: "Opening hours:",
             fr: "Heures d'ouverture:"
-        },
-        audioGuide: {
-            de: "audio/Münster_English.mp3",
-            en: "audio/Münster_English.mp3",
-            fr: "audio/Münster_English.mp3"
         }
     }
 ];
@@ -268,55 +258,8 @@ const splashScreenHTML = `
         <h1 class="splash-title">Basel Sehenswürdigkeiten</h1>
     </div>
 `;
-//audio Guide
-import React, { useState } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
 
-const AudioPlayer = ({ audioUrl, language }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audio] = useState(new Audio(audioUrl));
 
-  const togglePlay = () => {
-    if (isPlaying) {
-      audio.pause();
-      audio.currentTime = 0;
-    } else {
-      audio.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  // Handle audio ending
-  audio.onended = () => {
-    setIsPlaying(false);
-  };
-
-  return (
-    <div className="flex items-center gap-2 p-4 bg-gray-100 rounded-lg">
-      <button
-        onClick={togglePlay}
-        className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-      >
-        {isPlaying ? (
-          <>
-            <VolumeX className="w-5 h-5" />
-            <span>Stop Audio Guide</span>
-          </>
-        ) : (
-          <>
-            <Volume2 className="w-5 h-5" />
-            <span>Play Audio Guide</span>
-          </>
-        )}
-      </button>
-      <span className="text-sm text-gray-600">
-        {language === 'de' ? 'Deutsch' : language === 'en' ? 'English' : 'Français'}
-      </span>
-    </div>
-  );
-};
-
-export default AudioPlayer;
 
 // <img src="images/thisisbasel.jpg" alt="Girl in a jacket" style="width:409.2px;height:235px;">
 // <circle cx="50" cy="50" r="45" fill="none" stroke="#007AFF" stroke-width="8" />
@@ -547,10 +490,6 @@ function showLocationDetails(location) {
     detailsContainer.innerHTML = `
         <button id="back-button">← Zurück</button>
         <h1>${location.name[currentLanguage]}</h1>
-
-        <!-- Audio Player Container -->
-        <div id="audio-player-container" class="my-4"></div>
-
         <div class="image-carousel">
             ${location.images.map((img, index) => `
                 <img src="${img}" alt="${location.name[currentLanguage]}" class="carousel-image ${index === 0 ? 'active' : ''}">
@@ -560,20 +499,9 @@ function showLocationDetails(location) {
         </div>
         <p>${location.longDescription[currentLanguage]}</p>
 
+        
+
     `;
-
-    // Initialize React Audio Player component
-    const audioPlayerContainer = document.getElementById('audio-player-container');
-    if (location.audioGuide && location.audioGuide[currentLanguage]) {
-        const root = ReactDOM.createRoot(audioPlayerContainer);
-        root.render(
-            React.createElement(AudioPlayer, {
-                audioUrl: location.audioGuide[currentLanguage],
-                language: currentLanguage
-            })
-        );
-    }
-
     detailsContainer.classList.remove('hidden');
 
     document.getElementById('back-button').addEventListener('click', hideLocationDetails);
