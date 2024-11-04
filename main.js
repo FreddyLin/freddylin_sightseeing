@@ -77,7 +77,8 @@ const locations = [
             de: "Öffnungszeiten:",
             en: "Opening hours:",
             fr: "Heures d'ouverture:"
-    },
+        }
+    }
 ];
 
 // Beispieldaten für Sehenswürdigkeiten bleiben gleich...
