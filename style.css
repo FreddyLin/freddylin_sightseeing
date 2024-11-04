@@ -626,3 +626,164 @@ footer button i {
     margin-top: -25px;
     margin-left: -12px;
 }
+/* Audio Player Container */
+.audio-player {
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Play Button */
+.audio-play-button {
+    background-color: #007AFF;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.audio-play-button:hover {
+    background-color: #0066d6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+}
+
+.audio-play-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 122, 255, 0.2);
+}
+
+/* Language Badge */
+.language-badge {
+    background-color: rgba(0, 122, 255, 0.1);
+    color: #007AFF;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* Progress Bar Container */
+.progress-bar-container {
+    background-color: #e6e6e6;
+    border-radius: 3px;
+    margin: 20px 0 10px 0;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Progress Bar Fill */
+.progress-bar-fill {
+    background: linear-gradient(90deg, #007AFF, #00c6ff);
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.1s linear;
+    position: relative;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border: 2px solid #007AFF;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.progress-bar-container:hover .progress-bar-fill::after {
+    opacity: 1;
+}
+
+/* Time Display */
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 13px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Top Controls */
+.top-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* Hover effects for interactive elements */
+.audio-player button:hover {
+    opacity: 0.9;
+}
+
+/* Active state for buttons */
+.audio-player button:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .audio-player {
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    .audio-play-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .language-badge {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+}
+
+/* Loading State */
+.audio-player.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Progress Bar Hover Effect */
+.progress-bar-container::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    bottom: -8px;
+    background: transparent;
+}
+
+/* Error State */
+.audio-player.error {
+    border: 1px solid rgba(255, 0, 0, 0.1);
+    background: linear-gradient(145deg, #fff5f5, #fff0f0);
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 8px;
+    text-align: center;
+}

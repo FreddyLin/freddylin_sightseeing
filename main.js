@@ -37,6 +37,11 @@ const locations = [
             de: "Öffnungszeiten:",
             en: "Opening hours:",
             fr: "Heures d'ouverture:"
+        },
+        audioGuide: {
+            de: 'audio/muenster-german.mp3',
+            en: 'audio/muenster-english.mp3',
+            fr: 'audio/muenster-french.mp3'
         }
     },
     // Fügen Sie hier weitere Sehenswürdigkeiten hinzu
@@ -77,6 +82,11 @@ const locations = [
             de: "Öffnungszeiten:",
             en: "Opening hours:",
             fr: "Heures d'ouverture:"
+        },
+        audioGuide: {
+            de: 'audio/muenster-english.mp3',
+            en: 'audio/muenster-english.mp3',
+            fr: 'audio/muenster-english.mp3'
         }
     }
 ];
@@ -245,7 +255,6 @@ function showWelcomeScreen(lang) {
         });
     }
 }
-
 
 
 // Splash Screen HTML Template
@@ -491,6 +500,7 @@ function showLocationDetails(location) {
     detailsContainer.innerHTML = `
         <button id="back-button">← Zurück</button>
         <h1>${location.name[currentLanguage]}</h1>
+
         <div class="image-carousel">
             ${location.images.map((img, index) => `
                 <img src="${img}" alt="${location.name[currentLanguage]}" class="carousel-image ${index === 0 ? 'active' : ''}">
@@ -503,6 +513,7 @@ function showLocationDetails(location) {
         
 
     `;
+
     detailsContainer.classList.remove('hidden');
 
     document.getElementById('back-button').addEventListener('click', hideLocationDetails);
@@ -574,11 +585,16 @@ function setupLanguageButtons() {
 
 // ... (previous code remains unchanged)
 
+//die genauen Orte individuell
 function showLocationDetails(location) {
     const detailsContainer = document.getElementById('location-details');
     detailsContainer.innerHTML = `
         <button id="back-button">← Zurück</button>
         <h1>${location.name[currentLanguage]}</h1>
+
+        <!-- Audio Player Container -->
+        <div id="audio-player-container" class="my-4"></div>
+
         <div class="image-carousel">
             ${location.images.map((img, index) => `
                 <img src="${img}" alt="${location.name[currentLanguage]}" class="carousel-image ${index === 0 ? 'active' : ''}">
@@ -598,6 +614,19 @@ function showLocationDetails(location) {
         <div id="map" style="height: 300px;"></div>
         
     `;
+
+    // Initialize React Audio Player component if audio is available
+    const audioPlayerContainer = document.getElementById('audio-player-container');
+    if (location.audioGuide && location.audioGuide[currentLanguage]) {
+        const root = ReactDOM.createRoot(audioPlayerContainer);
+        root.render(
+            React.createElement(window.AudioPlayer, {
+                audioUrl: location.audioGuide[currentLanguage],
+                language: currentLanguage
+            })
+        );
+    }
+
     detailsContainer.classList.remove('hidden');
 
     document.getElementById('back-button').addEventListener('click', hideLocationDetails);
