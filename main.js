@@ -623,7 +623,7 @@ function showLocationDetails(location) {
             const userMarker = L.marker(userLocation, {
                 icon: L.divIcon({
                     html: '📍',
-                    iconSize: [25, 25],
+                    iconSize: [50, 50],
                     className: 'user-location-marker'
                 })
             }).addTo(map)
@@ -640,11 +640,11 @@ function showLocationDetails(location) {
         (error) => {
             console.error('Error getting location:', error);
             // If can't get user location, just center on destination
-            map.setView(location.geo, 14);
+            map.setView(location.geo, 15);
         });
     } else {
         // If geolocation not supported, just center on destination
-        map.setView(location.geo, 14);
+        map.setView(location.geo, 15);
     }
 
     // Setup event listeners
