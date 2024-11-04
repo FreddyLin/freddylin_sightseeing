@@ -601,11 +601,51 @@ function showLocationDetails(location) {
     setupCarousel();
 
     // Initialize map
-    const map = L.map('map').setView(location.geo, 15);
+    const map = L.map('map');
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-    L.marker(location.geo).addTo(map).bindPopup(location.name[currentLanguage]).openPopup();
+    
+    // Add destination marker
+    const destinationMarker = L.marker(location.geo)
+        .addTo(map)
+        .bindPopup(location.name[currentLanguage]);
+
+    // Create a group to hold both markers
+    const markersGroup = L.featureGroup([destinationMarker]);
+
+    // Check for geolocation support and add user location
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const userLocation = [position.coords.latitude, position.coords.longitude];
+            
+            // Add user location marker with custom icon
+            const userMarker = L.marker(userLocation, {
+                icon: L.divIcon({
+                    html: '📍',
+                    iconSize: [25, 25],
+                    className: 'user-location-marker'
+                })
+            }).addTo(map)
+              .bindPopup('Your Location');
+
+            // Add user marker to group
+            markersGroup.addLayer(userMarker);
+
+            // Fit map to show both markers
+            map.fitBounds(markersGroup.getBounds(), {
+                padding: [50, 50] // Add some padding around the bounds
+            });
+        }, 
+        (error) => {
+            console.error('Error getting location:', error);
+            // If can't get user location, just center on destination
+            map.setView(location.geo, 14);
+        });
+    } else {
+        // If geolocation not supported, just center on destination
+        map.setView(location.geo, 14);
+    }
 
     // Setup event listeners
     document.getElementById('back-button').addEventListener('click', hideLocationDetails);
