@@ -67,7 +67,16 @@ const locations = [
             'images/rathaus2.jpg',
             'images/rathaus3.webp'
         ],
-        geo: [47.55, 7.59]
+        geo: [47.55, 7.59],
+        openingDesc: {
+            de: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
+            en: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
+            fr: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet"
+        },
+        openinghours: {
+            de: "Öffnungszeiten:",
+            en: "Opening hours:",
+            fr: "Heures d'ouverture:"
     },
 ];
 
