@@ -27,63 +27,7 @@ const locations = [
             'images/muenster2.jpg',
             'images/muenster3.jpg'
         ],
-        visited: false,
-        besucht: {
-            de: "Visited:",
-            en: "Visited:",
-            fr: "Visited:"
-        },
         geo: [47.556245, 7.591869],
-        faq: {
-            de: [
-                {
-                    category: "Öffnungszeiten & Eintritt",
-                    items: [
-                        {
-                            question: "Wann ist das Münster geöffnet?",
-                            answer: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffent"
-                        },
-                        {
-                            question: "Wie viel kostet der Eintritt?",
-                            answer: "Der Eintritt in das Münster ist kostenlos."
-                        }
-
-                    ]
-                }
-            ],
-            en: [
-                {
-                    category: "Öffnungszeiten & Eintritt",
-                    items: [
-                        {
-                            question: "Wann ist das Münster geöffnet?",
-                            answer: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffent"
-                        },
-                        {
-                            question: "Wie viel kostet der Eintritt?",
-                            answer: "Der Eintritt in das Münster ist kostenlos."
-                        }
-
-                    ]
-                }
-            ],
-            fr: [
-                {
-                    category: "Öffnungszeiten & Eintritt",
-                    items: [
-                        {
-                            question: "Wann ist das Münster geöffnet?",
-                            answer: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffent"
-                        },
-                        {
-                            question: "Wie viel kostet der Eintritt?",
-                            answer: "Der Eintritt in das Münster ist kostenlos."
-                        }
-
-                    ]
-                }
-            ]
-        },
         openingDesc: {
             de: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
             en: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
@@ -123,27 +67,7 @@ const locations = [
             'images/rathaus2.jpg',
             'images/rathaus3.webp'
         ],
-        visited: false,
-        besucht: {
-            de: "Visited:",
-            en: "Visited:",
-            fr: "Visited:"
-        },
         geo: [47.55, 7.59],
-        faq: {
-            de: [
-                {
-                    category: "Öffnungszeiten & Eintritt",
-                    items: [
-                        {
-                            question: "Wann ist das Münster geöffnet?",
-                            answer: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffent"
-                        }
-
-                    ]
-                }
-            ]
-        },
         openingDesc: {
             de: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
             en: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
@@ -154,7 +78,7 @@ const locations = [
             en: "Opening hours:",
             fr: "Heures d'ouverture:"
         }
-    },
+    }
 ];
 
 // Beispieldaten für Sehenswürdigkeiten bleiben gleich...
@@ -367,26 +291,6 @@ function loadProgress() {
     }
 }
 
-// Funktion zum Togglen des Besuchsstatus
-async function toggleVisited(id) {
-    const location = locations.find(loc => loc.id === id);
-    if (location) {
-        try {
-            if (!location.visited) {
-                await fetch(`/api/visited/${id}`, { method: 'POST' });
-            } else {
-                await fetch(`/api/visited/${id}`, { method: 'DELETE' });
-            }
-            
-            location.visited = !location.visited;
-            const checkmark = document.querySelector(`.checkmark-icon[data-id="${id}"]`);
-            checkmark.textContent = location.visited ? '✅' : '☑️';
-        } catch (error) {
-            console.error('Error toggling visited status:', error);
-        }
-    }
-}
-
 
 // Rest des bestehenden Codes bleibt gleich...
 
@@ -561,8 +465,6 @@ function createLocationCard(location) {
             <p>${location.city[currentLanguage]}</p>
         </div>
         <div class="card-footer">
-            <p>${location.besucht[currentLanguage]}</p>
-            <span class="checkmark-icon" data-id="${location.id}">${location.visited ? '✅' : '☑️'}</span>
         </div>
     `;
 
@@ -576,24 +478,10 @@ function createLocationCard(location) {
         }
     });
 
-    const checkmark = card.querySelector('.checkmark-icon');
-    checkmark.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleVisited(location.id);
-    });
-
     return card;
 }
 
 
-function toggleVisited(id) {
-    const location = locations.find(loc => loc.id === id);
-    if (location) {
-        location.visited = !location.visited;
-        const checkmark = document.querySelector(`.checkmark-icon[data-id="${id}"]`);
-        checkmark.textContent = location.visited ? '✅' : '☑️';
-    }
-}
 // Unten: Die einzelnen Orte individuell
 function showLocationDetails(location) {
     const detailsContainer = document.getElementById('location-details');
@@ -703,26 +591,6 @@ function showLocationDetails(location) {
             <button id="find-way-btn" class="action-button">Find the way</button>
             ${!location.completed ? `<button id="arrived-btn" class="action-button">I have arrived</button>` : ''}
         </div>
-
-        <!-- FAQ Section -->
-        <div class="faq-section">
-            <h2>Häufig gestellte Fragen</h2>
-            ${location.faq[currentLanguage].map(category => `
-                        ${category.items.map(item => `
-                            <div class="faq-item">
-                                <button class="question-toggle">
-                                    ${item.question}
-                                    <span class="toggle-icon">+</span>
-                                </button>
-                                <div class="answer hidden">
-                                    ${item.answer}
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('')}
-        </div>
         
         <div id="map" style="height: 300px;"></div>
         
@@ -731,10 +599,9 @@ function showLocationDetails(location) {
 
     document.getElementById('back-button').addEventListener('click', hideLocationDetails);
     setupCarousel();
-    setupFAQHandlers();
 
     // Initialize map
-    const map = L.map('map').setView(location.geo, 14);
+    const map = L.map('map').setView(location.geo, 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
@@ -784,32 +651,10 @@ function showLocationDetails(location) {
     }
 
     setupCarousel();
-    setupFAQHandlers();
 }
 
 // ... (rest of the code remains unchanged)
 
-function setupFAQHandlers() {
-    // Handle category toggles
-    document.querySelectorAll('.category-toggle').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const items = e.target.closest('.faq-category').querySelector('.faq-items');
-            const icon = e.target.querySelector('.toggle-icon');
-            items.classList.toggle('hidden');
-            icon.textContent = items.classList.contains('hidden') ? '▼' : '▲';
-        });
-    });
-
-    // Handle question toggles
-    document.querySelectorAll('.question-toggle').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const answer = e.target.closest('.faq-item').querySelector('.answer');
-            const icon = e.target.querySelector('.toggle-icon');
-            answer.classList.toggle('hidden');
-            icon.textContent = answer.classList.contains('hidden') ? '+' : '-';
-        });
-    });
-}
 
 // Andere Funktionen bleiben unverändert
 
