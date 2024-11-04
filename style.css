@@ -616,3 +616,13 @@ footer button i {
 #modal-close-btn:hover {
     background-color: #0056b3;
 }
+.user-location-marker {
+    background: none;
+    border: none;
+}
+
+.user-location-marker div {
+    font-size: 25px;
+    margin-top: -25px;
+    margin-left: -12px;
+}
