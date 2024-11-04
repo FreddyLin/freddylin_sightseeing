@@ -233,6 +233,7 @@ function showWelcomeScreen(lang) {
         </div>
     `;
 
+    
     // Show welcome screen
     welcomeScreen.classList.remove('hidden');
 
