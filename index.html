@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sehenswürdigkeiten</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chatBot.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -19,6 +20,12 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         .leaflet-tile {
             border: none !important;
@@ -31,23 +38,171 @@
             border-radius: 0;
         }
     </style>
+
+    <!-- Add this to your <head> section of index.html -->
+<script>
+    // Configuration object for the chatbot
+    const chatConfig = {
+      apiEndpoint: 'https://api.openai.com/v1/chat/completions',
+      apiKey: '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', // Replace with your actual API key
+      model: 'gpt-3.5-turbo',
+      systemPrompt: `You are a helpful Basel city guide chatbot. You have knowledge about:
+        1. Basel Münster - A landmark cathedral built between 1019 and 1500
+        2. Basel City Hall (Rathaus) - The seat of government known for its red facade
+        You are friendly and concise in your responses. You can help with directions, 
+        historical information, and general queries about Basel.`
+    };
+    
+    // Chatbot UI handling
+    document.addEventListener('DOMContentLoaded', () => {
+      const chatBubble = document.getElementById('chat-bubble');
+      const chatContainer = document.getElementById('chat-container');
+      const closeChat = document.getElementById('close-chat');
+      const chatInput = document.getElementById('chat-input');
+      const sendMessage = document.getElementById('send-message');
+      const chatMessages = document.getElementById('chat-messages');
+      let isChatOpen = false;
+    
+      // Toggle chat window
+      chatBubble.addEventListener('click', () => {
+        isChatOpen = !isChatOpen;
+        chatContainer.classList.toggle('hidden');
+        document.querySelector('.notification-badge').classList.add('hidden');
+      });
+    
+      closeChat.addEventListener('click', () => {
+        isChatOpen = false;
+        chatContainer.classList.add('hidden');
+      });
+    
+      // Handle message sending
+      const sendChatMessage = async () => {
+        const message = chatInput.value.trim();
+        if (!message) return;
+    
+        // Add user message to chat
+        appendMessage('user', message);
+        chatInput.value = '';
+        adjustTextareaHeight();
+    
+        // Show typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'message bot typing-indicator';
+        typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+        chatMessages.appendChild(typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+        try {
+          const response = await fetchAIResponse(message);
+          // Remove typing indicator
+          typingIndicator.remove();
+          appendMessage('bot', response);
+        } catch (error) {
+          typingIndicator.remove();
+          appendMessage('bot', 'Sorry, I encountered an error. Please try again.');
+        }
+      };
+    
+      // Send message on button click or Enter press
+      sendMessage.addEventListener('click', sendChatMessage);
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    
+      // Auto-adjust textarea height
+      const adjustTextareaHeight = () => {
+        chatInput.style.height = 'auto';
+        chatInput.style.height = chatInput.scrollHeight + 'px';
+      };
+    
+      chatInput.addEventListener('input', adjustTextareaHeight);
+    
+      // Append message to chat
+      const appendMessage = (sender, content) => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        messageDiv.textContent = content;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      };
+    
+      // Fetch response from OpenAI API
+      const fetchAIResponse = async (message) => {
+        const response = await fetch(chatConfig.apiEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${chatConfig.apiKey}`
+          },
+          body: JSON.stringify({
+            model: chatConfig.model,
+            messages: [
+              { role: 'system', content: chatConfig.systemPrompt },
+              { role: 'user', content: message }
+            ],
+            temperature: 0.7,
+            max_tokens: 150
+          })
+        });
+    
+        const data = await response.json();
+        return data.choices[0].message.content;
+      };
+    
+      // Show initial notification after 30 seconds
+      setTimeout(() => {
+        if (!isChatOpen) {
+          document.querySelector('.notification-badge').classList.remove('hidden');
+        }
+      }, 30000);
+    });
+    </script>
 </head>
 <body>
 
    
     <header>
         <nav>
-            <button id="menu-button">☰</button>
+            <div class="menu-button-container">
+                <button id="menu-button" class="menu-button">
+                    <svg class="menu-button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
             <h1>Sehenswürdigkeiten</h1>
-            <!--<button id="search-button">🔍</button>-->
         </nav>
     </header>
 
-    <div id="language-menu" class="hidden">
-        <button data-lang="de">Deutsch</button>
-        <button data-lang="en">English</button>
-        <button data-lang="fr">Français</button>
+    <div id="language-modal" class="language-modal">
+        <div class="language-modal-content">
+            <div class="language-modal-header">
+                <h2 class="language-modal-title">Select Language</h2>
+                <button class="close-language-modal">×</button>
+            </div>
+            <div class="language-options">
+                <button class="language-option" data-lang="de">
+                    <span class="language-flag">🇩🇪</span>
+                    <span class="language-name">Deutsch</span>
+                    <span class="language-check">✓</span>
+                </button>
+                <button class="language-option" data-lang="en">
+                    <span class="language-flag">🇬🇧</span>
+                    <span class="language-name">English</span>
+                    <span class="language-check">✓</span>
+                </button>
+                <button class="language-option" data-lang="fr">
+                    <span class="language-flag">🇫🇷</span>
+                    <span class="language-name">Français</span>
+                    <span class="language-check">✓</span>
+                </button>
+            </div>
+        </div>
     </div>
+
 
     <div id="locations-container" role="main">
         <!-- Locations will be dynamically added here -->
@@ -123,6 +278,39 @@
     <div id="welcome-screen" class="overlay-screen hidden">
         <!-- Content wird dynamisch eingefügt -->
     </div>
+
+    <!-- Chat Widget-->
+    <div id="chat-widget">
+        <div id="chat-bubble" class="chat-bubble">
+          <span class="chat-icon">💬</span>
+          <span class="notification-badge hidden">1</span>
+        </div>
+        
+        <div id="chat-container" class="chat-container hidden">
+          <div class="chat-header">
+            <h3>Basel Guide Chat</h3>
+            <button id="close-chat">×</button>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+              Hello! 👋 I'm your Basel guide. Ask me anything about the locations or the city!
+            </div>
+          </div>
+          <div class="chat-input-container">
+            <textarea 
+              id="chat-input" 
+              placeholder="Type your message..." 
+              rows="1"
+            ></textarea>
+            <button id="send-message">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="send-icon">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      
 
     <script src="main.js"></script>
     <script src="audioPlayer.js"></script>

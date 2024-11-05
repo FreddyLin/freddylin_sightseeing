@@ -199,9 +199,15 @@ const welcomeContent = {
     }
 };
 
-// Helper function to normalize language codes
+// Helper function to normalize language codes with null check
 function normalizeLanguage(lang) {
+    // If lang is null or undefined, return default language
+    if (!lang) {
+        return 'de';
+    }
+
     // Convert to lowercase and handle full text to language code
+    const langText = lang.toLowerCase().trim();
     const langMap = {
         'deutsch': 'de',
         'english': 'en',
@@ -211,7 +217,7 @@ function normalizeLanguage(lang) {
         'en': 'en',
         'fr': 'fr'
     };
-    return langMap[lang.toLowerCase()] || 'de'; // Default to German if unknown
+    return langMap[langText] || 'de'; // Default to German if unknown
 }
 
 // Updated welcome screen function
@@ -311,14 +317,18 @@ function loadProgress() {
 document.addEventListener('DOMContentLoaded', () => {
     loadLocations();
     setupEventListeners();
+    setupLanguageModal();
 
     document.addEventListener('click', (event) => {
         const languageMenu = document.getElementById('language-menu');
         const menuButton = document.getElementById('menu-button');
         
-        // Close the menu if click is outside the menu and menu button
-        if (!languageMenu.contains(event.target) && !menuButton.contains(event.target)) {
-            languageMenu.classList.add('hidden');
+        // Only check contains if both elements exist
+        if (languageMenu && menuButton) {
+            // Close the menu if click is outside the menu and menu button
+            if (!languageMenu.contains(event.target) && !menuButton.contains(event.target)) {
+                languageMenu.classList.add('hidden');
+            }
         }
     });
 });
@@ -329,7 +339,9 @@ function toggleLanguageMenu(event) {
         event.stopPropagation();
     }
     const menu = document.getElementById('language-menu');
-    menu.classList.toggle('hidden');
+    if (menu) {
+        menu.classList.toggle('hidden');
+    }
 }
 
 
@@ -543,24 +555,30 @@ function setupCarousel() {
     });
 }
 
+let currentRoot = null;
+
 function hideLocationDetails() {
-    document.getElementById('location-details').classList.add('hidden');
+    const detailsContainer = document.getElementById('location-details');
+    
+    // Clean up React root if it exists
+    if (currentRoot) {
+        currentRoot.unmount();
+        currentRoot = null;
+    }
+    
+    detailsContainer.classList.add('hidden');
 }
 
 function setupEventListeners() {
     const menuButton = document.getElementById('menu-button');
-    //const searchButton = document.getElementById('search-button');
-    const refreshButton = document.getElementById('refresh-button');
-    //const attractionsButton = document.getElementById('attractions-button');
-    //const mapButton = document.getElementById('map-button');
-
-    menuButton.addEventListener('click', toggleLanguageMenu);
-    //searchButton.addEventListener('click', toggleSearch);
-    //refreshButton.addEventListener('click', refreshContent);
-    //attractionsButton.addEventListener('click', () => toggleActiveButton(attractionsButton));
-    //mapButton.addEventListener('click', () => toggleActiveButton(mapButton));
-
-    setupLanguageButtons();
+    if (menuButton) {
+        menuButton.addEventListener('click', () => {
+            const modal = document.getElementById('language-modal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        });
+    }
 }
 
 function toggleLanguageMenu() {
@@ -587,6 +605,11 @@ function setupLanguageButtons() {
 
 //die genauen Orte individuell
 function showLocationDetails(location) {
+    // First clean up any existing root
+    if (currentRoot) {
+        currentRoot.unmount();
+        currentRoot = null;
+    }
     const detailsContainer = document.getElementById('location-details');
     detailsContainer.innerHTML = `
         <button id="back-button">← Zurück</button>
@@ -618,14 +641,20 @@ function showLocationDetails(location) {
     // Initialize React Audio Player component if audio is available
     const audioPlayerContainer = document.getElementById('audio-player-container');
     if (location.audioGuide && location.audioGuide[currentLanguage]) {
-        const root = ReactDOM.createRoot(audioPlayerContainer);
-        root.render(
+        currentRoot = ReactDOM.createRoot(audioPlayerContainer);
+        currentRoot.render(
             React.createElement(window.AudioPlayer, {
                 audioUrl: location.audioGuide[currentLanguage],
                 language: currentLanguage
             })
         );
     }
+
+    // Setup back button with proper cleanup
+    const backButton = document.getElementById('back-button');
+    backButton.addEventListener('click', () => {
+        hideLocationDetails();
+    });
 
     detailsContainer.classList.remove('hidden');
 
@@ -738,5 +767,66 @@ function loadLocations() {
     locations.forEach(location => {
         const card = createLocationCard(location);
         locationsContainer.appendChild(card);
+    });
+}
+
+
+// Update your JavaScript
+function setupLanguageModal() {
+    const languageModal = document.getElementById('language-modal');
+    const closeButton = document.querySelector('.close-language-modal');
+    const languageOptions = document.querySelectorAll('.language-option');
+    const menuButton = document.getElementById('menu-button');
+
+    // Update the menu button HTML
+    menuButton.innerHTML = `
+        <svg class="menu-button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    `;
+
+    function showModal() {
+        languageModal.classList.add('show');
+        // Mark current language as active
+        languageOptions.forEach(option => {
+            option.classList.toggle('active', option.dataset.lang === currentLanguage);
+        });
+    }
+
+    function hideModal() {
+        languageModal.classList.remove('show');
+    }
+
+    // Setup event listeners
+    menuButton.addEventListener('click', showModal);
+    closeButton.addEventListener('click', hideModal);
+
+    // Close modal when clicking outside
+    languageModal.addEventListener('click', (e) => {
+        if (e.target === languageModal) {
+            hideModal();
+        }
+    });
+
+    // Handle language selection - Remove the span update
+    languageOptions.forEach(option => {
+        option.addEventListener('click', (e) => {
+            const selectedLang = option.dataset.lang;
+            
+            // Update current language
+            currentLanguage = selectedLang;
+            localStorage.setItem('selectedLanguage', selectedLang);
+
+            // Update UI
+            languageOptions.forEach(opt => {
+                opt.classList.toggle('active', opt === option);
+            });
+
+            // Reload locations with new language
+            loadLocations();
+
+            // Hide modal with slight delay for better UX
+            setTimeout(hideModal, 150);
+        });
     });
 }

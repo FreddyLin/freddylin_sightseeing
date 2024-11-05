@@ -36,6 +36,7 @@ body {
 }
 
 
+/* Header and Navigation Styles */
 header {
     background-color: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -44,17 +45,18 @@ header {
     left: 0;
     right: 0;
     z-index: 1000;
-
     padding: 10px 0;
+    height: 70px; /* Fixed height for header */
 }
 
 nav {
-    display: flex;
-    /*justify-content: space-between;*/
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 100px 1fr 100px; /* Three columns: left button, center title, right space */
     align-items: center;
-    /*padding: 10px 15px;*/
-    position: relative;
+    height: 100%;
+    padding: 0 15px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 #menu-button {
@@ -63,7 +65,10 @@ nav {
 }
 
 nav h1 {
-    font-size: 1.2rem;
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+    grid-column: 2; /* Place in center column */
 }
 
 #search-button {
@@ -80,12 +85,14 @@ nav button {
 
 #locations-container {
     padding: 70px 15px 60px;
+    padding-top: 70px; 
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;
 }
 
 .location-card {
+    top: 15px;
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
@@ -787,3 +794,192 @@ footer button i {
     margin-top: 8px;
     text-align: center;
 }
+/* Language Menu Modal */
+.language-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.language-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.language-modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 320px;
+    transform: scale(0.9);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.language-modal.show .language-modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.language-modal-header {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.language-modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.close-language-modal {
+    position: absolute;
+    right: -12px;
+    top: -12px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.close-language-modal:hover {
+    background-color: #f5f5f5;
+}
+
+.language-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.language-option {
+    background: none;
+    border: 2px solid #eee;
+    padding: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.language-option:hover {
+    border-color: #007AFF;
+    background-color: rgba(0, 122, 255, 0.05);
+}
+
+.language-option.active {
+    border-color: #007AFF;
+    background-color: rgba(0, 122, 255, 0.1);
+}
+
+.language-flag {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.language-name {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.language-check {
+    color: #007AFF;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.language-option.active .language-check {
+    opacity: 1;
+}
+
+/* Menu Button Styles */
+.menu-button {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    height: 0px; /* Fixed height for the button */
+}
+
+.menu-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 8px 15px;
+}
+
+.menu-button:active {
+    transform: scale(0.97);
+}
+
+.menu-button-icon {
+    width: 30px;  /* Increased from previous size */
+    height: 30px; /* Increased from previous size */
+    stroke-width: 2px;
+}
+
+
+/* Container for better positioning */
+.menu-button-container {
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Animation for modal entry */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .language-modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .language-option {
+        padding: 12px;
+    }
+}
+#chat-widget-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
