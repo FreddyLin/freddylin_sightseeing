@@ -1,0 +1,36 @@
+/* Button with arrived */
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.action-button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007AFF;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+}
+
+#arrived-btn {
+    background-color: #28a745;
+}
+
+#arrived-btn:hover {
+    background-color: #218838;
+}
+
+#find-way-btn {
+    width: 100%;
+    margin-bottom: 35px;
+}
