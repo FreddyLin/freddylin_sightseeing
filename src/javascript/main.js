@@ -372,6 +372,17 @@ const couponModalContent = {
         closeButton: 'Fermer'
     }
 };
+const couponButton = {
+    de: {
+        text: 'Gutschein anzeigen'
+    },
+    en: {
+        text: 'Show Coupon'
+    },
+    fr: {
+        text: 'Afficher le coupon'
+    }
+};
 
 let currentLanguage = 'de';
 let showingSplashScreen = true;
@@ -932,6 +943,7 @@ function showLocationDetails(location) {
 
         <div class="action-buttons">
             ${!location.completed ? `<button id="arrived-btn" class="action-button">${doneButton[currentLanguage].done} </button>` : ''}
+            ${isLastLocation ? `<button id="show-coupon-btn" class="action-button">${couponButton[currentLanguage].text}</button>` : ''}
         </div>
 
         <!-- Coupon popup container -->
@@ -940,6 +952,14 @@ function showLocationDetails(location) {
         <div id="map" style="height: 300px;"></div>
         
     `;
+
+    // Add event listener for the coupon button if it exists
+    const couponBtn = document.getElementById('show-coupon-btn');
+    if (couponBtn) {
+        couponBtn.addEventListener('click', () => {
+            showCouponModal();
+        });
+    }
 
     // Modify the showLocationDetails function to include the coupon check
     // Add this inside showLocationDetails function, after the detailsContainer.innerHTML part:
@@ -1049,12 +1069,6 @@ function showLocationDetails(location) {
             
             // Save progress
             saveProgress();
-
-            // Check if this was the last location
-            if (isLastLocation(location)) {
-                // Show the coupon modal
-                showCouponModal();
-            }
 
             // Show completion modal
             showCompletedLocationModal();
