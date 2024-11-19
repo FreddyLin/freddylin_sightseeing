@@ -4,8 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sehenswürdigkeiten</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="chatBot.css">
+    <!--StyleSheets-->
+    <!--Functions-->
+    <link rel="stylesheet" href="../src/css/functions/actionButton.css">
+    <link rel="stylesheet" href="../src/css/functions/audio.css">
+    <link rel="stylesheet" href="../src/css/functions/carousel.css">
+    <link rel="stylesheet" href="../src/css/functions/faq.css">
+    <link rel="stylesheet" href="../src/css/functions/languageMenu.css">
+    <link rel="stylesheet" href="../src/css/functions/lockedLocation.css">
+    <link rel="stylesheet" href="../src/css/functions/map.css">
+    <link rel="stylesheet" href="../src/css/functions/coupon.css">
+    <!--General-->
+    <link rel="stylesheet" href="../src/css/general/locationCard.css">
+    <link rel="stylesheet" href="../src/css/general/modal.css">
+    <link rel="stylesheet" href="../src/css/general/splash.css">
+    <link rel="stylesheet" href="../src/css/general/style.css">
+    <link rel="stylesheet" href="../src/css/general/welcome.css">
+
+    <!--Other things-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -40,126 +56,6 @@
     </style>
 
     <!-- Add this to your <head> section of index.html -->
-<script>
-    // Configuration object for the chatbot
-    const chatConfig = {
-      apiEndpoint: 'https://api.openai.com/v1/chat/completions',
-      apiKey: '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', // Replace with your actual API key
-      model: 'gpt-3.5-turbo',
-      systemPrompt: `You are a helpful Basel city guide chatbot. You have knowledge about:
-        1. Basel Münster - A landmark cathedral built between 1019 and 1500
-        2. Basel City Hall (Rathaus) - The seat of government known for its red facade
-        You are friendly and concise in your responses. You can help with directions, 
-        historical information, and general queries about Basel.`
-    };
-    
-    // Chatbot UI handling
-    document.addEventListener('DOMContentLoaded', () => {
-      const chatBubble = document.getElementById('chat-bubble');
-      const chatContainer = document.getElementById('chat-container');
-      const closeChat = document.getElementById('close-chat');
-      const chatInput = document.getElementById('chat-input');
-      const sendMessage = document.getElementById('send-message');
-      const chatMessages = document.getElementById('chat-messages');
-      let isChatOpen = false;
-    
-      // Toggle chat window
-      chatBubble.addEventListener('click', () => {
-        isChatOpen = !isChatOpen;
-        chatContainer.classList.toggle('hidden');
-        document.querySelector('.notification-badge').classList.add('hidden');
-      });
-    
-      closeChat.addEventListener('click', () => {
-        isChatOpen = false;
-        chatContainer.classList.add('hidden');
-      });
-    
-      // Handle message sending
-      const sendChatMessage = async () => {
-        const message = chatInput.value.trim();
-        if (!message) return;
-    
-        // Add user message to chat
-        appendMessage('user', message);
-        chatInput.value = '';
-        adjustTextareaHeight();
-    
-        // Show typing indicator
-        const typingIndicator = document.createElement('div');
-        typingIndicator.className = 'message bot typing-indicator';
-        typingIndicator.innerHTML = '<span></span><span></span><span></span>';
-        chatMessages.appendChild(typingIndicator);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-        try {
-          const response = await fetchAIResponse(message);
-          // Remove typing indicator
-          typingIndicator.remove();
-          appendMessage('bot', response);
-        } catch (error) {
-          typingIndicator.remove();
-          appendMessage('bot', 'Sorry, I encountered an error. Please try again.');
-        }
-      };
-    
-      // Send message on button click or Enter press
-      sendMessage.addEventListener('click', sendChatMessage);
-      chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          sendChatMessage();
-        }
-      });
-    
-      // Auto-adjust textarea height
-      const adjustTextareaHeight = () => {
-        chatInput.style.height = 'auto';
-        chatInput.style.height = chatInput.scrollHeight + 'px';
-      };
-    
-      chatInput.addEventListener('input', adjustTextareaHeight);
-    
-      // Append message to chat
-      const appendMessage = (sender, content) => {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
-        messageDiv.textContent = content;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      };
-    
-      // Fetch response from OpenAI API
-      const fetchAIResponse = async (message) => {
-        const response = await fetch(chatConfig.apiEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${chatConfig.apiKey}`
-          },
-          body: JSON.stringify({
-            model: chatConfig.model,
-            messages: [
-              { role: 'system', content: chatConfig.systemPrompt },
-              { role: 'user', content: message }
-            ],
-            temperature: 0.7,
-            max_tokens: 150
-          })
-        });
-    
-        const data = await response.json();
-        return data.choices[0].message.content;
-      };
-    
-      // Show initial notification after 30 seconds
-      setTimeout(() => {
-        if (!isChatOpen) {
-          document.querySelector('.notification-badge').classList.remove('hidden');
-        }
-      }, 30000);
-    });
-    </script>
 </head>
 <body>
 
@@ -173,7 +69,7 @@
                     </svg>
                 </button>
             </div>
-            <h1>Sehenswürdigkeiten</h1>
+            <h1 id="page-title">Sehenswürdigkeiten</h1>
         </nav>
     </header>
 
@@ -202,7 +98,6 @@
             </div>
         </div>
     </div>
-
 
     <div id="locations-container" role="main">
         <!-- Locations will be dynamically added here -->
@@ -312,8 +207,8 @@
       </div>
       
 
-    <script src="main.js"></script>
-    <script src="audioPlayer.js"></script>
+    <script src="../src/javascript/main.js"></script>
+    <script src="../src/javascript/audioPlayer.js"></script>
     <!--<script src="auth.js"></script>-->
 </body>
 </html>

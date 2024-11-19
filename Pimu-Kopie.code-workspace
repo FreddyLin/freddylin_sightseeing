@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "../../../Pimu-Kopie"
+		},
+		{
+			"path": "../../../Pimu"
+		},
+		{
+			"path": "../../../im2"
+		},
+		{
+			"path": "../../../pimuv3"
+		},
+		{
+			"path": "../../../freddylin_sightseeing-main"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "freddylin_sightseeing"
+	}
+}

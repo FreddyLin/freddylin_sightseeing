@@ -1,0 +1,57 @@
+#locations-container {
+    padding: 70px 15px 60px;
+    padding-top: 70px; 
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.location-card {
+    top: 15px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.location-card:hover {
+    transform: translateY(-5px);
+}
+
+.location-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.location-card .content {
+    padding: 15px;
+}
+
+.location-card h2 {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+.location-card p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+#location-details {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    z-index: 2000;
+    overflow-y: auto;
+    padding: 70px 15px 60px;
+}
+
+#location-details.hidden {
+    display: none;
+}

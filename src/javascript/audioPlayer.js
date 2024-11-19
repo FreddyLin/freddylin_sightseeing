@@ -1,3 +1,30 @@
+const translations = {
+  de: {
+    play: 'Audio-Führung abspielen',
+    stop: 'Audio-Führung stoppen',
+    error: 'Fehler beim Laden der Audio-Datei',
+    currentTime: 'Aktuelle Zeit',
+    duration: 'Gesamtdauer',
+    language: 'Deutsch'
+  },
+  en: {
+    play: 'Play Audio Guide',
+    stop: 'Stop Audio Guide',
+    error: 'Error loading audio file',
+    currentTime: 'Current Time',
+    duration: 'Duration',
+    language: 'English'
+  },
+  fr: {
+    play: 'Lancer l\'audio-guide',
+    stop: 'Arrêter l\'audio-guide',
+    error: 'Erreur de chargement du fichier audio',
+    currentTime: 'Temps actuel',
+    duration: 'Durée totale',
+    language: 'Français'
+  }
+};
+
 const AudioPlayer = ({ audioUrl, language }) => {
     const [isPlaying, setIsPlaying] = React.useState(false);
     const [progress, setProgress] = React.useState(0);
@@ -6,6 +33,9 @@ const AudioPlayer = ({ audioUrl, language }) => {
     const [error, setError] = React.useState(null);
     const audioRef = React.useRef(null);
     const progressBarRef = React.useRef(null);
+    const t = translations[language] || translations.en;
+
+    
   
     React.useEffect(() => {
       audioRef.current = new Audio(audioUrl);
@@ -80,7 +110,7 @@ const AudioPlayer = ({ audioUrl, language }) => {
           className: 'audio-play-button',
           disabled: !!error
         },
-          React.createElement('span', null, isPlaying ? 'Stop Audio Guide' : 'Play Audio Guide')
+          React.createElement('span', null, isPlaying ? t.stop : t.play)
         ),
         React.createElement('span', {
           className: 'language-badge'
