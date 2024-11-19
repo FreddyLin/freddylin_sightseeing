@@ -40,9 +40,9 @@ const locations = [
             fr: " "
         },
         audioGuide: {
-            de: '../audio/muenster-german.mp3',
-            en: '../audio/muenster-english.mp3',
-            fr: '../audio/muenster-french.mp3'
+            de: '../audio/bankverein/bankverein-german.mp3',
+            en: '../audio/bankverein/bankverein-english.mp3',
+            fr: '../audio/bankverein/bankverein-french.mp3'
         }
     },
     {
@@ -85,9 +85,9 @@ const locations = [
             fr: "Heures d'ouverture:"
         },
         audioGuide: {
-            de: '../audio/muenster-german.mp3',
-            en: '../audio/muenster-english.mp3',
-            fr: '../audio/muenster-french.mp3'
+            de: '../audio/muenster/muenster-german.mp3',
+            en: '../audio/muenster/muenster-english.mp3',
+            fr: '../audio/muenster/muenster-french.mp3'
         }
     },
     {
@@ -130,9 +130,9 @@ const locations = [
             fr: ""
         },
         audioGuide: {
-            de: '../audio/muenster-german.mp3',
-            en: '../audio/muenster-english.mp3',
-            fr: '../audio/muenster-french.mp3'
+            de: '../audio/schifflande/schifflande-german.mp3',
+            en: '../audio/schifflande/schifflande-english.mp3',
+            fr: '../audio/schifflande/schifflande-french.mp3'
         }
     },
     // Sehenwürdigkeit #4 Rathaus
@@ -165,19 +165,19 @@ const locations = [
         ],
         geo: [47.558169, 7.588069],
         openingDesc: {
-            de: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
-            en: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
-            fr: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet"
+            de: "",
+            en: "",
+            fr: ""
         },
         openinghours: {
-            de: "Öffnungszeiten:",
-            en: "Opening hours:",
-            fr: "Heures d'ouverture:"
+            de: "",
+            en: "",
+            fr: ""
         },
         audioGuide: {
-            de: '../audio/muenster-english.mp3',
-            en: '../audio/muenster-english.mp3',
-            fr: '../audio/muenster-english.mp3'
+            de: '../audio/rathaus/rathaus-german.mp3',
+            en: '../audio/rathaus/rathaus-english.mp3',
+            fr: '../audio/rathaus/rathaus-french.mp3'
         }
     },
     // Sehenwürdigkeit #5 Barfüsserkirche
@@ -210,19 +210,19 @@ const locations = [
         ],
         geo: [47.554701, 7.589965],
         openingDesc: {
-            de: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
-            en: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet",
-            fr: "Das Münster ist täglich von 10:00 bis 17:00 Uhr geöffnet"
+            de: "",
+            en: "",
+            fr: ""
         },
         openinghours: {
-            de: "Öffnungszeiten:",
-            en: "Opening hours:",
-            fr: "Heures d'ouverture:"
+            de: "",
+            en: "",
+            fr: ""
         },
         audioGuide: {
-            de: '../audio/muenster-english.mp3',
-            en: '../audio/muenster-english.mp3',
-            fr: '../audio/muenster-english.mp3'
+            de: '../audio/barfusserkirche/barfusserkirche-german.mp3',
+            en: '../audio/barfusserkirche/barfusserkirche-english.mp3',
+            fr: '../audio/barfusserkirche/barfusserkirche-french.mp3'
         }
     },
     // Sehenwürdigkeit #6 Cliquenkeller
@@ -265,9 +265,9 @@ const locations = [
             fr: "Funfact:"
         },
         audioGuide: {
-            de: '../audio/muenster-english.mp3',
-            en: '../audio/muenster-english.mp3',
-            fr: '../audio/muenster-english.mp3'
+            de: '../audio/cliquekeller/cliquekeller-german.mp3',
+            en: '../audio/cliquekeller/cliquekeller-english.mp3',
+            fr: '../audio/cliquekeller/cliquekeller-french.mp3'
         }
     }
 ];
