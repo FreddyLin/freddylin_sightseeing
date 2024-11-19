@@ -2,5 +2,8 @@
 .env
 
 src/javascript/node_modules/
-audio/
-images/
+images/bankverein/
+images/barfusserkirche/
+images/cliquenkeller/
+images/muenster/
+images/rathaus/
