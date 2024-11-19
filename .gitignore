@@ -2,3 +2,6 @@
 .env
 
 src/javascript/node_modules/
+audio/bankverein/
+audio/muenster/
+audio/rathaus/
