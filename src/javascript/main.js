@@ -953,14 +953,6 @@ function showLocationDetails(location) {
         
     `;
 
-    // Add event listener for the coupon button if it exists
-    const couponBtn = document.getElementById('show-coupon-btn');
-    if (couponBtn) {
-        couponBtn.addEventListener('click', () => {
-            showCouponModal();
-        });
-    }
-
     // Modify the showLocationDetails function to include the coupon check
     // Add this inside showLocationDetails function, after the detailsContainer.innerHTML part:
     function isLastLocation(location) {
