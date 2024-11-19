@@ -2,6 +2,7 @@
 .env
 
 src/javascript/node_modules/
-audio/bankverein/
+audio/bankverein/bankverein-english.mp3
+audio/bankverein/bankverein-german.mp3
 audio/muenster/
 audio/rathaus/
