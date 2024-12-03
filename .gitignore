@@ -2,11 +2,5 @@
 .env
 
 src/javascript/node_modules/
-audio/bankverein/
-audio/muenster/muenster-english.mp3
-audio/muenster/muenster-french.mp3
-audio/muenster/muenster-german.mp3
-
-audio/rathaus/rathaus-english.mp3
-audio/rathaus/rathaus-german.mp3
-audio/rathaus/rathaus-french.mp3
+audio/
+images/

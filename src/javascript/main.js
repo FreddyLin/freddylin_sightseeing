@@ -64,7 +64,7 @@ const locations = [
             fr: 'La cathédrale de Bâle est l\'emblème de la ville de Bâle et l\'une des principales attractions.'
         },
         longDescription: {
-            de: 'Das Basler Münster ist eines der bekanntesten Wahrzeichen der Stadt Basel. Ursprünglich im 12. Jahrhundert als romanische Kirche erbaut, wurde es nach einem Erdbeben im 14. Jahrhundert im gotischen Stil wiederaufgebaut. Seine rot leuchtenden Sandsteinmauern, die bunt gemusterten Dachziegel und die beiden spitzen Türme machen es zu einem architektonischen Highlight. Von der Pfalz, einer Plattform hinter dem Münster, hat man einen beeindruckenden Blick über den Rhein und die Altstadt. Besonders für junge Erwachsene bietet das Münster spannende Einblicke in Geschichte und Architektur – von den kunstvollen Reliefs an der Fassade bis hin zu den beeindruckenden Glasfenstern. Der Aufstieg auf den Turm lohnt sich, um einen fantastischen Panoramablick auf Basel und das Dreiländereck zu genießen.',
+            de: 'Das Basler Münster ist eines der bekanntesten Wahrzeichen der Stadt Basel. Ursprünglich im 12. Jahrhundert als romanische Kirche erbaut, wurde es nach einem Erdbeben im 14. Jahrhundert im gotischen Stil wiederaufgebaut. Seine rot leuchtenden Sandsteinmauern, die bunt gemusterten Dachziegel und die beiden spitzen Türme machen es zu einem architektonischen Highlight. Von der Pfalz, einer Plattform hinter dem Münster, hat man einen beeindruckenden Blick über den Rhein und die Altstadt. Besonders für junge Erwachsene bietet das Münster spannende Einblicke in Geschichte und Architektur – von den kunstvollen Reliefs an der Fassade bis hin zu den beeindruckenden Glasfenstern. Der Aufstieg auf den Turm lohnt sich, um einen fantastischen Panoramablick auf Basel und das Dreiländereck zu geniessen.',
             en: 'The Basel Minster is one of the city\'s most iconic landmarks. Originally built as a Romanesque church in the 12th century, it was rebuilt in the Gothic style after an earthquake in the 14th century. Its red sandstone walls, colorful patterned roof tiles, and twin spires make it an architectural highlight. From the Pfalz, a terrace behind the Minster, you can enjoy stunning views of the Rhine and the old town. For young adults, the Minster offers fascinating insights into history and architecture—from the intricate reliefs on the facade to the impressive stained glass windows. Climbing the tower is highly recommended for a breathtaking panoramic view of Basel and the tri-border region.',
             fr: 'La cathédrale de Bâle, ou Münster, est l’un des symboles les plus célèbres de la ville. Construite au XIIᵉ siècle dans un style roman, elle fut reconstruite dans un style gothique après un tremblement de terre au XIVᵉ siècle. Ses murs en grès rouge, ses tuiles colorées et ses deux flèches en font un chef-d’œuvre architectural. Depuis la Pfalz, une terrasse située derrière la cathédrale, on peut admirer une vue spectaculaire sur le Rhin et la vieille ville. Pour les jeunes adultes, le Münster est une véritable découverte, avec ses reliefs artistiques, ses vitraux impressionnants et son riche patrimoine. Monter sur la tour est une expérience incontournable pour profiter d’une vue panoramique sur Bâle et la région des trois frontières.'
         },
@@ -351,7 +351,7 @@ const couponModalContent = {
         discount: '1 Gratis Getränk',
         button: 'Code kopieren',
         copied: 'Kopiert!',
-        closeButton: 'Schließen'
+        closeButton: 'Schliessen'
     },
     en: {
         title: 'Congratulations!',
@@ -607,7 +607,7 @@ function loadLocations() {
 
 const modalContent = {
     de: {
-        message: 'Schließen Sie den vorherigen Ort ab, um diesen freizuschalten!',
+        message: 'Schliessen Sie den vorherigen Ort ab, um diesen freizuschalten!',
         button: 'Verstanden'
     },
     en: {
@@ -943,7 +943,6 @@ function showLocationDetails(location) {
 
         <div class="action-buttons">
             ${!location.completed ? `<button id="arrived-btn" class="action-button">${doneButton[currentLanguage].done} </button>` : ''}
-            ${isLastLocation ? `<button id="show-coupon-btn" class="action-button">${couponButton[currentLanguage].text}</button>` : ''}
         </div>
 
         <!-- Coupon popup container -->
