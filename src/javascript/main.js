@@ -429,19 +429,19 @@ const doneButton = {
 
 const welcomeContent = {
     de: {
-        title: 'Willkommen zur Basel Stadtführung',
+        title: 'Willkommen zur Basler Stadtführung',
         description: 'Entdecken Sie die schönsten Sehenswürdigkeiten von Basel. Diese interaktive Tour führt Sie zu historischen Orten und bietet spannende Einblicke in die Stadt.',
         detailsone: 'Die Tour ist 2,2 km lang und dauert etwa 45 Minuten.',
         buttonText: 'Tour starten'
     },
     en: {
-        title: 'Welcome to Basel City Tour',
+        title: 'Welcome to the Basel city tour',
         description: 'Discover the most beautiful attractions of Basel. This interactive tour will guide you to historical locations and provide exciting insights into the city.',
         detailsone: 'The tour is 2.2 km long and takes about 45 minutes.',
         buttonText: 'Start Tour'
     },
     fr: {
-        title: 'Bienvenue à la visite de Bâle',
+        title: 'Bienvenue à la visite guidée de la ville de Bâle',
         description: 'Découvrez les plus belles attractions de Bâle. Cette visite interactive vous guidera vers des lieux historiques et vous offrira des perspectives passionnantes sur la ville.',
         detailsone: 'La visite fait 2,2 km et dure environ 45 minutes.',
         buttonText: 'Commencer la visite'
