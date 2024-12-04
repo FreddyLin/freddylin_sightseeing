@@ -39,4 +39,6 @@ Um zu starten, können Sie hier klicken: [START](https://freddylin.github.io/fre
 
 ## Lizenz
 
+
+
 Copyright © 2024 Freddy
