@@ -2,8 +2,6 @@
 
 Eine interaktive App zur Erkundung der Sehenswürdigkeiten und Wahrzeichen Basels.
 
-Um zu starten, können Sie hier klicken: [START](https://freddylin.github.io/freddylin_sightseeing/public/)
-
 ## Funktionen
 
 - 🗺️ Interaktive Karten mit Echtzeit-Navigation
